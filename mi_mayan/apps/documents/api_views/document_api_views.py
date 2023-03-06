@@ -1,6 +1,9 @@
 import logging
+from django.http import JsonResponse
+from django.shortcuts import redirect
 
 from rest_framework.generics import get_object_or_404
+from rest_framework.views import APIView
 
 from mayan.apps.acls.models import AccessControlList
 from mayan.apps.rest_api import generics
@@ -18,11 +21,45 @@ from ..serializers.document_serializers import (
     DocumentChangeTypeSerializer, DocumentUploadSerializer,
 )
 
-from .document_api_functions import cargar_modelo_extra, update_modelo_extra
+
+
+from .document_api_functions import cargar_modelo_extra, update_modelo_extra, obtener_form
+
 
 logger = logging.getLogger(name=__name__)
+#>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+##################################################################################
+# Controlador API /document_form/document_type_id
+##################################################################################
+class APIFormView(APIView):
 
+    def get(self, request,format=None, *args, **kwargs):
 
+        document_type_id = kwargs['document_type_id']
+
+        form = obtener_form(document_type_id, initial= {'document_type_id': document_type_id } )
+
+        form = form.as_p()
+        
+        return JsonResponse( {'form': form } )
+    
+    def post(self, request, format=None, *args, **kwargs):
+
+        document_type_id = kwargs['document_type_id']
+
+        form = obtener_form(document_type_id, request.POST, request.FILES)
+
+        if form.is_valid():
+            return JsonResponse({ 'success': True })
+        
+        else:
+            form = form.as_p()
+            return JsonResponse({'success': False, 'form': form })
+#<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+##################################################################################
+# Controlador API /documents/id
+##################################################################################
 class APIDocumentDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     Returns the selected document details.
@@ -45,7 +82,7 @@ class APIDocumentDetailView(generics.RetrieveUpdateDestroyAPIView):
         return {
             '_event_actor': self.request.user,
     }
-    #######################################################
+    #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     def put(self, request, *args, **kwargs):
         doc_id = kwargs['document_id']
         document = Document.objects.get(id = doc_id)
@@ -53,7 +90,7 @@ class APIDocumentDetailView(generics.RetrieveUpdateDestroyAPIView):
         update_modelo_extra(document, request.data)
 
         return self.update(request, *args, **kwargs)
-    #######################################################
+    #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         
 
 
@@ -74,7 +111,9 @@ class APIDocumentFileActionListView(generics.ListAPIView):
     def get_source_queryset(self):
         return DocumentFileAction.get_all()
 
-
+##################################################################################
+# Controlador API /documents
+##################################################################################
 class APIDocumentListView(generics.ListCreateAPIView):
     """
     get: Returns a list of all the documents.
@@ -100,21 +139,21 @@ class APIDocumentListView(generics.ListCreateAPIView):
             queryset=queryset
         )
 
-        #######################################################
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if hasattr(self, 'get_instance_extra_data'):
             serializer.validated_data['_instance_extra_data'] = self.get_instance_extra_data()
         
         cargar_modelo_extra(serializer.validated_data['document_type_id'], serializer)     
-        #######################################################
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         super().perform_create(serializer=serializer)
 
     def get_instance_extra_data(self):
         return {
             '_event_actor': self.request.user,
-            #######################################################
+            #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             'extras': self.request.data
-            #######################################################
+            #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
         }
 
 
@@ -135,7 +174,9 @@ class APIDocumentChangeTypeView(generics.ObjectActionAPIView):
             document_type=document_type_id, user=self.request.user
         )
 
-
+##################################################################################
+# Controlador API /documents/id/upload
+##################################################################################
 class APIDocumentUploadView(generics.CreateAPIView):
     """
     post: Create a new document and a new document file.
@@ -155,20 +196,20 @@ class APIDocumentUploadView(generics.CreateAPIView):
             queryset=queryset
         )
 
-        #######################################################
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         if hasattr(self, 'get_instance_extra_data'):
             serializer.validated_data['_instance_extra_data'] = self.get_instance_extra_data()
         
         cargar_modelo_extra(serializer.validated_data['document_type_id'], serializer)     
-        #######################################################
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
         super().perform_create(serializer=serializer)
 
     def get_instance_extra_data(self):
+
         return {
             '_event_actor': self.request.user,
-            #######################################################
+            #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
             'extras': self.request.data
-            #######################################################
-    
+            #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<    
         }

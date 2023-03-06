@@ -95,6 +95,21 @@ class Document(
             'deferred upload via the API.'
         ), verbose_name=_('Is stub?')
     )
+    
+    # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+   
+    id_alumno = models.CharField(
+        max_length=255,
+        help_text=_(
+            'uuid del alumno'
+        ),
+        verbose_name=_('uuid'))
+    email_alumno = models.EmailField(
+        max_length=255,
+        help_text=_(
+            'email.'
+        ),
+        verbose_name=_('email'))
 
     constancia_examen = models.OneToOneField(Constancia_Examen,
         null=True, blank=True,
@@ -131,6 +146,8 @@ class Document(
         help_text=_('si el doc es una solicitud de equivalencias guarani.'),
         on_delete=models.CASCADE, related_name='extras',
         verbose_name=_('solicitud equivalencias guarani'))
+    
+    #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
     objects = DocumentManager()
     trash = TrashCanManager()

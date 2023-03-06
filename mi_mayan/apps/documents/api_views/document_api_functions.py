@@ -8,6 +8,15 @@ from ..serializers.document_serializers import (
     Solicitud_Certificado_Aprobacion_Serializer, Solicitud_Equivalencias_Guarani_Serializer
 )
 
+from ..forms.document_forms_unq import (
+    Constancia_Examen_Form, Solicitud_Equivalencias_Guarani_Form, Solicitud_Aviso_Ultimo_Examen_Form,
+    Solicitud_Baja_Propuesta_Guarani_Form, Solicitud_Certificado_Aprobacion_Form, 
+    Constancia_Aprobacion_Materia_Form
+)
+
+##################################################################################
+# Cargar Modelo
+##################################################################################
 def cargar_modelo_extra(document_type_id, serializer):
 
     models_array = ['constancia_examen', 
@@ -52,7 +61,9 @@ def cargar_modelo_extra(document_type_id, serializer):
         else:
             serializer.validated_data[model] = None
 
-
+##################################################################################
+# Update Modelo
+##################################################################################
 def update_modelo_extra(document, new_data):
     if 1 == document.document_type.id:
         objeto = Constancia_Examen.objects.get(id = document.constancia_examen.id)
@@ -81,3 +92,47 @@ def update_modelo_extra(document, new_data):
     form = form(objeto, data=new_data, partial=True)
     form.is_valid(raise_exception=True)
     form.save()
+
+##################################################################################
+# Obtener Form
+##################################################################################
+def obtener_form(document_type_id, post=None, files=None, initial=False):
+    document_type_id = int(document_type_id)
+    
+    if 1 == document_type_id:
+            if initial:
+                form = Constancia_Examen_Form(initial = initial)
+            else:
+                form = Constancia_Examen_Form(post, files)
+
+    elif 2 == document_type_id:
+            if initial:
+                form = Solicitud_Aviso_Ultimo_Examen_Form(initial = initial)
+            else:
+                form = Solicitud_Aviso_Ultimo_Examen_Form(post, files)
+
+    elif 3 == document_type_id:
+            if initial:
+                form = Constancia_Aprobacion_Materia_Form(initial = initial)
+            else:
+                form = Constancia_Aprobacion_Materia_Form(post, files)
+
+    elif 4 == document_type_id:
+            if initial:
+                form = Solicitud_Baja_Propuesta_Guarani_Form(initial = initial)
+            else:
+                form = Solicitud_Baja_Propuesta_Guarani_Form(post, files)
+
+    elif 5 == document_type_id:
+            if initial:
+                form = Solicitud_Certificado_Aprobacion_Form(initial = initial)
+            else:
+                form = Solicitud_Certificado_Aprobacion_Form(post, files)
+
+    elif 6 == document_type_id:
+            if initial:
+                form = Solicitud_Equivalencias_Guarani_Form(initial = initial)
+            else:
+                form = Solicitud_Equivalencias_Guarani_Form(post, files)
+
+    return form

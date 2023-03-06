@@ -1,9 +1,10 @@
 from django.conf.urls import url
+from django.urls import path
 
 from .api_views.document_api_views import (
     APIDocumentDetailView, APIDocumentChangeTypeView,
     APIDocumentFileActionListView, APIDocumentListView,
-    APIDocumentUploadView
+    APIDocumentUploadView, APIFormView
 )
 from .api_views.document_file_api_views import (
     APIDocumentFileDetailView, APIDocumentFileListView,
@@ -509,6 +510,12 @@ urlpatterns.extend(urlpatterns_favorite_documents)
 urlpatterns.extend(urlpatterns_trashed_documents)
 
 api_urls_documents = [
+    #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    url(
+        regex=r'^document_form/(?P<document_type_id>[0-9]+)/$', name='documents-forms',
+        view=APIFormView.as_view()
+    #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+    ),
     url(
         regex=r'^document_file_actions/$', name='document-file-action-list',
         view=APIDocumentFileActionListView.as_view()

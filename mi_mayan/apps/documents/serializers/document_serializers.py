@@ -53,6 +53,18 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
         view_name='rest_api:documentversion-list'
     )
 
+    #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
+    id_alumno = serializers.CharField(
+        help_text=_('id del alumno.'),
+        label=_('id del alumno')
+    )
+
+    email_alumno = serializers.EmailField(
+        help_text=_('email del alumno.'),
+        label=_('email del alumno')
+    )
+
     constancia_examen = Constancia_Examen_Serializer(read_only=True)
 
     solicitud_aviso_ultimo_examen = Solicitud_Aviso_Ultimo_Examen_Serializer(read_only=True)
@@ -65,6 +77,8 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
 
     solicitud_equivalencias_guarani = Solicitud_Equivalencias_Guarani_Serializer(read_only=True)
 
+    #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
     class Meta:
         create_only_fields = ('document_type_id',)
         extra_kwargs = {
@@ -74,11 +88,15 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
                 'view_name': 'rest_api:document-detail'
             },
         }
+
+        #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
         fields = (
             'datetime_created', 'description', 'document_change_type_url',
             'document_type', 'document_type_id', 'file_latest',
             'file_list_url', 'id', 'label', 'language', 'url', 'uuid',
-            'version_active', 'version_list_url', 'constancia_examen', 'solicitud_aviso_ultimo_examen', 
+            'version_active', 'version_list_url', 'id_alumno', 'email_alumno',
+            'constancia_examen', 'solicitud_aviso_ultimo_examen', 
             'constancia_aprobacion_materia', 'solicitud_baja_propuesta_guarani',
             'solicitud_certificado_aprobacion', 'solicitud_equivalencias_guarani'
         )
@@ -86,11 +104,13 @@ class DocumentSerializer(serializers.HyperlinkedModelSerializer):
         read_only_fields = (
             'datetime_created', 'document_change_type_url', 'document_type',
             'file_latest', 'file_list_url', 'id', 'uuid', 'url',
-            'version_list_url', 'constancia_examen' , 'solicitud_aviso_ultimo_examen', 
-            'constancia_aprobacion_materia', 'solicitud_baja_propuesta_guarani',
-            'solicitud_certificado_aprobacion', 'solicitud_equivalencias_guarani'
+            'version_list_url', 'id_alumno', 'email_alumno', 'constancia_examen' ,
+            'solicitud_aviso_ultimo_examen', 'constancia_aprobacion_materia', 
+            'solicitud_baja_propuesta_guarani', 'solicitud_certificado_aprobacion',
+            'solicitud_equivalencias_guarani'
         )
 
+        #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 class DocumentChangeTypeSerializer(serializers.Serializer):
     document_type_id = FilteredPrimaryKeyRelatedField(
@@ -129,6 +149,8 @@ class DocumentUploadSerializer(DocumentSerializer):
         )
 
         return instance
+    
+    #>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
     class Meta(DocumentSerializer.Meta):
         create_only_fields = ('document_type_id', 'file')
@@ -136,5 +158,10 @@ class DocumentUploadSerializer(DocumentSerializer):
             'datetime_created', 'description', 'document_change_type_url',
             'document_type', 'document_type_id', 'file', 'file_list_url',
             'id', 'label', 'language', 'file_latest', 'pk', 'url', 'uuid',
-            'version_active', 'version_list_url'
+            'version_active', 'version_list_url', 'id_alumno', 'email_alumno',
+            'constancia_examen' , 'solicitud_aviso_ultimo_examen', 
+            'constancia_aprobacion_materia', 'solicitud_baja_propuesta_guarani',
+            'solicitud_certificado_aprobacion', 'solicitud_equivalencias_guarani'
         )
+
+    #<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<

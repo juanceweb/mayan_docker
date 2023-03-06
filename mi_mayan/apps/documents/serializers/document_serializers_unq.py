@@ -7,7 +7,9 @@ from ..models.document_models_unq import (Constancia_Examen, Solicitud_Aviso_Ult
     Solicitud_Equivalencias_Guarani
 )
 
-
+##################################################################################
+# Constancia Examen
+##################################################################################
 class Constancia_Examen_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
@@ -21,6 +23,9 @@ class Constancia_Examen_Serializer(serializers.HyperlinkedModelSerializer):
         model = Constancia_Examen
         fields = '__all__'
 
+##################################################################################
+# Solicitud Aviso Ultimo Examen
+##################################################################################
 class Solicitud_Aviso_Ultimo_Examen_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
@@ -34,6 +39,9 @@ class Solicitud_Aviso_Ultimo_Examen_Serializer(serializers.HyperlinkedModelSeria
         model = Solicitud_Aviso_Ultimo_Examen
         fields = '__all__'
 
+##################################################################################
+# Constancia Aprobacion Materia
+##################################################################################
 class Constancia_Aprobacion_Materia_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
@@ -47,6 +55,9 @@ class Constancia_Aprobacion_Materia_Serializer(serializers.HyperlinkedModelSeria
         model = Constancia_Aprobacion_Materia
         fields = '__all__'
 
+##################################################################################
+# Solicitud Baja Propuesta Guarani
+##################################################################################
 class Solicitud_Baja_Propuesta_Guarani_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
@@ -60,6 +71,9 @@ class Solicitud_Baja_Propuesta_Guarani_Serializer(serializers.HyperlinkedModelSe
         model = Solicitud_Baja_Propuesta_Guarani
         fields = '__all__'
 
+##################################################################################
+# Solicitud Certificado Aprobacion
+##################################################################################
 class Solicitud_Certificado_Aprobacion_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
@@ -73,6 +87,9 @@ class Solicitud_Certificado_Aprobacion_Serializer(serializers.HyperlinkedModelSe
         model = Solicitud_Certificado_Aprobacion
         fields = '__all__'
 
+##################################################################################
+# Solicitud Equivalencias
+##################################################################################
 class Solicitud_Equivalencias_Guarani_Serializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(lookup_url_kwarg='document_id',view_name="rest_api:document-detail")
     
